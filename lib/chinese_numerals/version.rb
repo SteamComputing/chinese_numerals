@@ -1,0 +1,3 @@
+module ChineseNumerals
+  VERSION = "0.0.2"
+end

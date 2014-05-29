@@ -34,8 +34,11 @@ describe Integer do
   end
 
   it "knows output and omit zeros in decimal mode" do
-    10000002000.to_chinese(:decimal => true).must_equal("一百億二千")
+    10000000200.to_chinese(:decimal => true).must_equal("一百億零二百")
   end
 
+  it "is able to shorten the leading 1 in decimal mode" do
+    108000.to_chinese(:decimal => true, :shorten => true).must_equal("十萬八千")
+  end
 end
 

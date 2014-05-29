@@ -12,7 +12,8 @@ Integer.class_eval do
   def to_chinese(args = {})
     opts = {
       :simple => true,
-      :decimal => false
+      :decimal => false,
+      :shorten => false
     }.merge args
 
     chinese_numbers  = opts[:simple] ? SIMPLE_CHINESE_NUMBERS  : FORMAL_CHINESE_NUMBERS
@@ -28,6 +29,12 @@ Integer.class_eval do
 
       0.upto len - 1 do |i|
         digit = str[i].to_i
+
+        if (i == 0) && (digit == 1) && (len % 4 == 2) && opts[:shorten]
+          res << chinese_decimals[1]
+          next
+        end
+
         if digit == 0
           zeros += 1
         else
@@ -38,10 +45,10 @@ Integer.class_eval do
           res << chinese_numbers[digit] + chinese_decimals[(len - 1 - i) % 4]
         end
         # append group name unless 4 zeros met
-        if (len - 1 - i) % 4 == 0
-          res << CHINESE_GROUPS[(len - 1 - i) / 4] unless zeros == 4
-          # reset zeros for each group
-          zeros = 0
+        if ((len - 1 - i) % 4 == 0) && (zeros < 4)
+            res << CHINESE_GROUPS[(len - 1 - i) / 4]
+            # reset zeros for each group
+            zeros = 0
         end
       end
 
